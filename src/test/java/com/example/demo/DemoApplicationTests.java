@@ -1,15 +1,25 @@
 package com.example.demo;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.example.demo.com.common.List2Tree;
 import com.example.demo.com.mapper.UserMapper;
 import com.example.demo.com.model.User;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.junit.Assert.assertEquals;
 
 
 @SpringBootTest
@@ -20,6 +30,7 @@ class DemoApplicationTests {
 
     @Autowired
     private UserMapper userMapper;
+
 
     @Test
     public void testSet() {
@@ -66,4 +77,38 @@ class DemoApplicationTests {
                 .forEach(System.out::println);
 
     }
+
+    @Test
+    public void testStream() {
+        ArrayList<User> objects = new ArrayList<>();
+        objects.add(new User(1,"dyt",1,1));
+        objects.add(new User(2,"dyt",2,1));
+        objects.add(new User(1,"dyt",1,1));
+        //objects.stream().filter((e)-> e.getUsername().equals("dyt")).forEach(System.out::println);
+        objects.stream().distinct().forEach(System.out::println);
+        System.out.println("----1----");
+        objects.stream().map(User::getSex).forEach(System.out::println);
+        System.out.println("----2----");
+        objects.stream().map(User::getSex).collect(Collectors.toList()).forEach(System.out::println);
+        System.out.println("----3----");
+        objects.stream().sorted((e1, e2) -> Integer.compare(e1.getId(), e2.getId())).forEach(System.out::println);
+        for (User o :
+                objects) {
+            System.out.println(o);
+        }
+    }
+    @Test
+    public void testOptional(){
+        User dy = new User();
+        User dyt = new User(1, "dyt", 1, 1);
+        User user = Optional.of(dy).orElse(dyt);
+        System.out.println(user);
+    }
+
+    @Test
+    public void testListToTree(){
+        boolean b = ObjectUtils.allNotNull(1);
+        System.out.println(b);
+    }
+
 }
